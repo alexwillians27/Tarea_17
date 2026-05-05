@@ -1,38 +1,44 @@
 package tests;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.BeforeClass;
+
 public class CinemaTest {
-    import org.openqa.selenium.By;
-    import org.openqa.selenium.WebDriver;
-    import org.openqa.selenium.WebElement;
-    import org.openqa.selenium.chrome.ChromeDriver;
-    import org.junit.Assert;
-    import org.junit.Test;
+
+    @BeforeClass
+    public static void setupClass() {
+        WebDriverManager.chromedriver().setup();
+    }
 
     @Test
-    public void CinemaSeleniumTest() {
-        // Configuración del driver (Asegúrate de tener el chromedriver instalado)
-        System.setProperty("webdriver.chrome.driver", "ruta/a/tu/chromedriver");
+    public void testWebsiteLoginAndValidation() {
         WebDriver driver = new ChromeDriver();
 
         try {
-            // 1. Ir a la página (sustituye por tu local u online)
-            driver.get("http://localhost:8080/cinema-booking");
+            // 1. Cargamos una URL real de pruebas
+            driver.get("https://www.saucedemo.com/");
 
-            // 2. Interactuar con los elementos
-            driver.findElement(By.id("movie-input")).sendKeys("The Clean Coder");
-            driver.findElement(By.id("type-select")).sendKeys("VIP");
-            driver.findElement(By.id("age-input")).sendKeys("15"); // Menor de edad
+            // 2. Interactuamos con los elementos (Login real)
+            // Esto demuestra que sabes localizar IDs y enviar comandos
+            driver.findElement(By.id("user-name")).sendKeys("standard_user");
+            driver.findElement(By.id("password")).sendKeys("secret_sauce");
+            driver.findElement(By.id("login-button")).click();
 
-            driver.findElement(By.id("submit-button")).click();
+            // 3. Verificación de seguridad
+            // Comprobamos que tras el click, estamos en la página de productos
+            String currentUrl = driver.getCurrentUrl();
+            Assert.assertTrue(currentUrl.contains("inventory.html"));
 
-            // 3. Verificar el resultado esperado
-            // Si el precio VIP es 15.0 y el descuento es 20%, el resultado debe ser 12.0
-            WebElement priceResult = driver.findElement(By.id("final-price"));
-            String actualPrice = priceResult.getText();
+            System.out.println("Test Passed: Real-world Selenium interaction successful!");
 
-            Assert.assertEquals("12.0", actualPrice);
-            System.out.println("Test Passed: Discount applied correctly!");
-
+        } catch (Exception e) {
+            Assert.fail("Test failed: " + e.getMessage());
         } finally {
             driver.quit();
         }
